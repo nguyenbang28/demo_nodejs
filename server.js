@@ -1,3 +1,4 @@
+require('./db/demoDb');
 const express = require('express');
 const demoRoutes = require('./routes/demoRoute');
 const app = express();

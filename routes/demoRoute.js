@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const UserController = require('../controllers/demoController');
+const demoController = require('../controllers/demoController');
 const {body} = require('express-validator');
 const jwt = require('jsonwebtoken');
 
 function verifyToken(req, res, next) {
-    console.log('authorization: ' + req.headers['authorization']);
     const token = req.headers['authorization']?.split(' ')[1];
-    console.log('token: ' + token);
     if (!token) return res.status(401).json({ message: 'Token required'});
 
     jwt.verify(token, 'token', (err, user) => {
@@ -18,8 +16,12 @@ function verifyToken(req, res, next) {
     });
 }
 
-router.post('/login', UserController.login)
+router.post('/login', demoController.login)
 
-router.post('/users', verifyToken, [body('input').notEmpty().withMessage('Input is required')], UserController.getValues);
+router.post('/users', verifyToken, [body('input').notEmpty().withMessage('Input is required')], demoController.getValues);
+
+router.post('/add', verifyToken, demoController.createUser);
+
+router.post('/update', verifyToken, demoController.updateUser);
 
 module.exports = router;
